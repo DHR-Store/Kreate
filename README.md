@@ -12,7 +12,7 @@
 
   <br>
 
-  [![Discord badge](https://dcbadge.limes.pink/api/server/https://discord.gg/PQrnTt5f?theme=default-inverted)](([https://discord.gg/PQrnTt5f](https://discord.gg/PQrnTt5f)))
+  [![Discord badge](https://dcbadge.limes.pink/api/server/https://discord.gg/PQrnTt5f?theme=default-inverted)]([[([https://discord.gg/PQrnTt5f](https://discord.gg/PQrnTt5f)](https://discord.gg/PQrnTt5f))](https://discord.gg/PQrnTt5f))
 
 </div>
 
