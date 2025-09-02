@@ -157,17 +157,6 @@ UI/UX designers are welcome!
 | App logo                                                      | [MedieroAF](https://github.com/MedieroAF)                                                                                              | MedieroAF's logo since 1.3.0                                  |
 | Badges                                                        | [Shields.IO](https://shields.io/), [dcbadge](https://github.com/gitlimes/dcbadge)                                                      |                                                               |
 
-# 💸 Donation
-
-> Help me keep the project running longer.
-> This is completely optional, you don't have to pay to use/unlock any feature.
-
-| Platform  | Address                                                                                         |
-|-----------|-------------------------------------------------------------------------------------------------|
-| Liberapay | https://liberapay.com/knighthat                                                                 |
-| Patreon   | https://patreon.com/knighthat                                                                   |
-| Monero    | 44G5dUFTbFWYfZAk69irnDUCTNZzP5viNTmkGpCNCLHjjYQq7jjRTWoYTH1aY8P841hExP31Qxg2hXPtxreKu11zCYdxQUj |
-| Bitcoin   | 1GpZUvhdVkCFxqF4vuaiFxtBTxB3L94vnK                                                              |
 
 
 # ⚠️ Disclaimer
