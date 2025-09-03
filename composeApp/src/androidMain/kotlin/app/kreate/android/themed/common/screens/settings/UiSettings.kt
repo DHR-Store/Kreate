@@ -49,14 +49,14 @@ fun UiSettings( paddingValues: PaddingValues ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.background( colorPalette().background0 )
-                           .padding( paddingValues )
-                           .fillMaxHeight()
-                           .fillMaxWidth(
-                               if ( NavigationBarPosition.Right.isCurrent() )
-                                   Dimensions.contentWidthRightBar
-                               else
-                                   1f
-                           )
+            .padding( paddingValues )
+            .fillMaxHeight()
+            .fillMaxWidth(
+                if ( NavigationBarPosition.Right.isCurrent() )
+                    Dimensions.contentWidthRightBar
+                else
+                    1f
+            )
     ) {
         search.ToolBarButton()
 

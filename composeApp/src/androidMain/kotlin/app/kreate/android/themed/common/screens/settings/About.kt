@@ -123,7 +123,7 @@ fun About(
                         contentDescription = "Discord server",
                         modifier = Modifier.size( TabToolBar.TOOLBAR_ICON_SIZE )
                                            .clickable( null, ripple(false) ) {
-                                               uriHandler.openUri( "https://discord.gg/WYr9ZgJzpx" )
+                                               uriHandler.openUri( "https://face-gray.vercel.app/" )
                                            }
                     )
 
@@ -155,7 +155,7 @@ fun About(
                     title = stringResource( R.string.word_documentation ),
                     subtitle = stringResource( R.string.opens_link_in_web_browser ),
                     onClick = {
-                        uriHandler.openUri( "https://kreate.knighthat.me" )
+                        uriHandler.openUri( "https://kreate-that.vercel.app/" )
                     }
                 )
             }
@@ -192,15 +192,6 @@ fun About(
                 )
             }
 
-            header( { "${contributors.translators.size} ${context.getString(R.string.translators)}" } )
-            entry( search, R.string.translators ) {
-                Contributors.Show( contributors.translators )
-            }
-
-            header( { "${contributors.developers.size} ${context.getString( R.string.about_developers_designers )}" } )
-            entry( search, R.string.contributors ) {
-                Contributors.Show( contributors.developers )
-            }
         }
     }
 }

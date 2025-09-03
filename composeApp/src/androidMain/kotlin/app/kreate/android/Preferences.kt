@@ -1089,8 +1089,8 @@ sealed class Preferences<T>(
                 // TODO: maybe compatible with biometric authentication
                 @Suppress("DEPRECATION")
                 val masterKey: MasterKey = MasterKey.Builder( context, MasterKey.DEFAULT_MASTER_KEY_ALIAS )
-                                                    .setKeyScheme( MasterKey.KeyScheme.AES256_GCM )
-                                                    .build()
+                    .setKeyScheme( MasterKey.KeyScheme.AES256_GCM )
+                    .build()
                 @Suppress("DEPRECATION")
                 encryptedPreferences = EncryptedSharedPreferences.create(
                     context,
