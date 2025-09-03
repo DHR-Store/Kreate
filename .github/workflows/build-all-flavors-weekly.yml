@@ -39,7 +39,7 @@ jobs:
       # Latest build's version
       upstream: ${{ steps.upstream.outputs.version }}
     env:
-  GITHUB_REPOSITORY: ${{ github.repository }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
 
 
     steps:
