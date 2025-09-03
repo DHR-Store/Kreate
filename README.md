@@ -12,19 +12,13 @@
 
   <br>
 
-  [![Discord badge](https://dcbadge.limes.pink/api/server/https://discord.gg/WYr9ZgJzpx?theme=default-inverted)](https://discord.gg/WYr9ZgJzpx)
+  [![Discord badge](https://dcbadge.limes.pink/api/server/https://discord.gg/PQrnTt5f?theme=default-inverted)]([[([https://discord.gg/PQrnTt5f](https://discord.gg/PQrnTt5f)](https://discord.gg/PQrnTt5f))](https://discord.gg/PQrnTt5f))
 
 </div>
 
 # 📲 Installation
 
 [![Get it on Github](./assets/get-it-on/GitHub.png)](https://github.com/knighthat/RiMusic/releases/latest)
-[![Get it on Obtainium](./assets/get-it-on/Obtainium.png)](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22me.knighthat.kreate%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fknighthat%2FKreate%22%2C%22author%22%3A%22knighthat%22%2C%22name%22%3A%22Kreate%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22filterReleaseTitlesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22filterReleaseNotesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22verifyLatestTag%5C%22%3Atrue%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22useLatestAssetDateAsReleaseDate%5C%22%3Atrue%2C%5C%22releaseTitleAsVersion%5C%22%3Afalse%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22Kreate-release.apk%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22Kreate%5C%22%2C%5C%22appAuthor%5C%22%3A%5C%22Knight%20Hat%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%7D)
-[![Get it on F-Droid](./assets/get-it-on/F-Droid.png)](https://f-droid.org/packages/me.knighthat.kreate)
-[![Get it on OpenApk](./assets/get-it-on/OpenAPK.png)](https://www.openapk.net/kreate/me.knighthat.kreate/)
-[![Get it on IzzyOnDroid](./assets/get-it-on/IzzyOnDroid.png)](https://apt.izzysoft.de/fdroid/index/apk/me.knighthat.kreate)
-
-
 # ✨ Features
 
 - **Multilingual:** English, Italian, German, Russian, French, Spanish, Czech, Turkish, Romanian and more. Contributions for other languages are welcome
@@ -163,17 +157,6 @@ UI/UX designers are welcome!
 | App logo                                                      | [MedieroAF](https://github.com/MedieroAF)                                                                                              | MedieroAF's logo since 1.3.0                                  |
 | Badges                                                        | [Shields.IO](https://shields.io/), [dcbadge](https://github.com/gitlimes/dcbadge)                                                      |                                                               |
 
-# 💸 Donation
-
-> Help me keep the project running longer.
-> This is completely optional, you don't have to pay to use/unlock any feature.
-
-| Platform  | Address                                                                                         |
-|-----------|-------------------------------------------------------------------------------------------------|
-| Liberapay | https://liberapay.com/knighthat                                                                 |
-| Patreon   | https://patreon.com/knighthat                                                                   |
-| Monero    | 44G5dUFTbFWYfZAk69irnDUCTNZzP5viNTmkGpCNCLHjjYQq7jjRTWoYTH1aY8P841hExP31Qxg2hXPtxreKu11zCYdxQUj |
-| Bitcoin   | 1GpZUvhdVkCFxqF4vuaiFxtBTxB3L94vnK                                                              |
 
 
 # ⚠️ Disclaimer
