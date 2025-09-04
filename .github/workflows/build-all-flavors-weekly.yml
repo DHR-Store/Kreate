@@ -17,23 +17,29 @@ jobs:
   build_time:
     name: Capture current time
     runs-on: ubuntu-latest
+    # Set date as a variable
     outputs:
       date: ${{ steps.date.outputs.date }}
 
     steps:
       - name: Get date
         id: date
+        # Output of "October 2 2024" will be "20241002"
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
 
   versioning:
     name: Extract version
     runs-on: ubuntu-latest
+    # Set versions as a variable
     outputs:
+      # Current version in repository
       downstream: ${{ steps.downstream.outputs.version }}
+      # Current version code in repository
       code: ${{ steps.downstream.outputs.code }}
+      # Latest build's version
       upstream: ${{ steps.upstream.outputs.version }}
     env:
-      GITHUB_REPOSITORY: ${{ github.repository }}
+      GITHUB_REPOSITORY: ${{ github.action_repository }}
 
     steps:
       - uses: actions/checkout@v5
@@ -42,12 +48,21 @@ jobs:
 
       - name: Get downstream (local) version
         id: downstream
+        # Output is current version located inside composeApp/build.gradle.kts
+        # android {
+        #   defaultConfig {
+        #     versionName = "..."
+        #   }
+        # }
         run: |
           echo "version=$(grep -E '^\s*versionName\s*=' composeApp/build.gradle.kts | awk -F '"' '{print $2}')" >> $GITHUB_OUTPUT
           echo "code=$(grep -E '^\s*versionCode\s*=' composeApp/build.gradle.kts | awk -F '= ' '{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Get upstream version
         id: upstream
+        # Fetch tag_name of latest tag from GitHub.
+        # tag_name contains "v" prefix, so it must be removed
+        # before adding to GITHUB_OUTPUT
         run: |
           tag_name="$(curl -s https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest | jq -r .tag_name)"
           echo "version=${tag_name#v}" >> $GITHUB_OUTPUT
@@ -70,16 +85,15 @@ jobs:
 
       - name: Whether changelogs exists
         run: |
-          echo "🔎 Checking changelog for versionCode=${{ needs.versioning.outputs.code }}"
           if [ ! -e "fastlane/metadata/android/en-US/changelogs/${{ needs.versioning.outputs.code }}.txt" ]; then
-            echo "⚠️ Missing changelog file: fastlane/metadata/android/en-US/changelogs/${{ needs.versioning.outputs.code }}.txt"
+            exit 1
           fi
 
   build-uncompressed:
     needs: [versioning, verify-version]
     name: Build uncompressed version
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 60       # Prevent Github Action from terminating this workflow on first run
 
     steps:
       - uses: actions/checkout@v5
@@ -87,19 +101,20 @@ jobs:
           submodules: true
 
       - name: Setup Java 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.0.0
         with:
           java-version: "21"
           distribution: "corretto"
 
       - name: Restore Gradle dependencies & build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
             ./build
             ./composeApp/build
+          # Cache key has flavor's name to prevent override each other
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
@@ -107,16 +122,17 @@ jobs:
         run: ./gradlew assembleGithubUncompressed
 
       - name: Upload artifacts for signing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: unsigned-uncompressed
-          path: composeApp/build/outputs/apk/github/uncompressed/*.apk
+          path: |
+            composeApp/build/outputs/apk/github/uncompressed/*.apk
 
   build-release:
     needs: [versioning, verify-version]
     name: Build release version
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 60       # Prevent Github Action from terminating this workflow on first run
 
     steps:
       - uses: actions/checkout@v5
@@ -124,19 +140,20 @@ jobs:
           submodules: true
 
       - name: Setup Java 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.0.0
         with:
           java-version: "21"
           distribution: "corretto"
 
       - name: Restore Gradle dependencies & build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
             ./build
             ./composeApp/build
+          # Cache key has flavor's name to prevent override each other
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
@@ -144,16 +161,17 @@ jobs:
         run: ./gradlew assembleGithubRelease
 
       - name: Upload artifacts for signing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: unsigned-release
-          path: composeApp/build/outputs/apk/github/release/*.apk
+          path: |
+            composeApp/build/outputs/apk/github/release/*.apk
 
   build-izzy:
     needs: [versioning, verify-version]
     name: Build Izzy version
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 60       # Prevent Github Action from terminating this workflow on first run
 
     steps:
       - uses: actions/checkout@v5
@@ -161,19 +179,20 @@ jobs:
           submodules: true
 
       - name: Setup Java 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.0.0
         with:
           java-version: "21"
           distribution: "corretto"
 
       - name: Restore Gradle dependencies & build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
             ./build
             ./composeApp/build
+          # Cache key has flavor's name to prevent override each other
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
@@ -181,10 +200,11 @@ jobs:
         run: ./gradlew assembleIzzyRelease
 
       - name: Upload artifacts for signing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: unsigned-izzy
-          path: composeApp/build/outputs/apk/izzy/release/*.apk
+          path: |
+            composeApp/build/outputs/apk/izzy/release/*.apk
 
   sign-apks:
     name: Sign all built APKs
@@ -196,29 +216,37 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v5.0.0
         with:
+          # Destination path. Supports basic tilde expansion.
+          # Optional. Default is $GITHUB_WORKSPACE
           path: upstream/unsigned
+          # When multiple artifacts are matched, this changes the behavior of the destination directories.
+          # If true, the downloaded artifacts will be in the same directory specified by path.
+          # If false, the downloaded artifacts will be extracted into individual named directories within the specified path.
+          # Optional. Default is 'false'
           merge-multiple: true
 
       - name: Sign APKs
         uses: Tlaster/android-sign@v1.2.2
         with:
           releaseDirectory: upstream/unsigned
+
           signingKeyBase64: "${{ secrets.KREATE_KEYSTORE }}"
           keyStorePassword: "${{ secrets.KREATE_KEYSTORE_PASSWD }}"
           alias: "${{ secrets.KREATE_KEY_ALIAS }}"
           keyPassword: "${{ secrets.KREATE_KEY_PASSWD }}"
+
           output: signed
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Remove trails
+      - name: Remove trails     # remove "-signed"
         run: |
           for filename in signed/*.apk; do mv "$filename" "${filename//-signed}"; done
 
       - name: Upload for release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: signed-apks
           path: signed/*.apk
@@ -229,7 +257,7 @@ jobs:
 
     steps:
       - name: Download signed APKs
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v5.0.0
         with:
           name: signed-apks
 
@@ -237,33 +265,38 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: '*.apk'
+          # Name: v0.0.1-20250303
           name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
-          tag_name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
-          make_latest: true
-          body: |
+          tag_name: v${{ needs.versioning.outputs.downstream }}
+          make_latest: "true"
+          body: |           
             ## What's `Kreate-izzy.apk`
-
+            
             This is APK built specifically for IzzyOnDroid with update checker disabled. You shouldn't
             download this version here.
-
+            
             ## Verification
+            
             > Always check for signature before installing any app you downloaded from Github or any other APK distributors.\
-
+            
             ### Public key hashes
-            | Algorithm | Hash digest |
-            |-----------|-------------|
-            | SHA-256   | 9dadd5c4bbfb59174bca523dd10b66bedbbf7b2e00630fa990d140a6a17ce7a5 |
-            | SHA-1     | f49a497bd47322c90e9f534ff945ac05f3a8e77a |
-            | MD5       | d4fc781f4a5ffc10434cb84d93706eba |
-
+            
+            | Algorithm      | Hash digest                                                      |
+            |----------------|------------------------------------------------------------------|
+            | SHA-256        | 9dadd5c4bbfb59174bca523dd10b66bedbbf7b2e00630fa990d140a6a17ce7a5 |
+            | SHA-1          | f49a497bd47322c90e9f534ff945ac05f3a8e77a                         |
+            | MD5            | d4fc781f4a5ffc10434cb84d93706eba                                 |
+            
             ### Certificate hashes
-            | Algorithm | Hash digest |
-            |-----------|-------------|
-            | SHA-256   | 1bd03a8de5df4dbd7faddb81b9f2aaf55681a584a93d6fb47e9a5ccc736ef7ac |
-            | SHA-1     | 1690571d0d8b8d54c43a4b9460a2a2bc5f67e9bc |
-            | MD5       | 320e604e315a0abb177e8d7570dcf4dc |
-
+            
+            | Algorithm      | Hash digest                                                      |
+            |----------------|------------------------------------------------------------------|
+            | SHA-256        | 1bd03a8de5df4dbd7faddb81b9f2aaf55681a584a93d6fb47e9a5ccc736ef7ac |
+            | SHA-1          | 1690571d0d8b8d54c43a4b9460a2a2bc5f67e9bc                         |
+            | MD5            | 320e604e315a0abb177e8d7570dcf4dc                                 |
+            
             ## FAQ
+            
             <details> 
             <summary>Q1: How do I download your build?</summary>
               <blockquote>
@@ -290,14 +323,16 @@ jobs:
               <blockquote>
                 Most Android apps go through a process called <b>minification</b>. This step remvoes 
                 unused codes and resources which reduces total file size while keeping all functionalities intact.
-
+                
                 You should NOT use this build unless there's a bug in release build but unaffected in uncompressed
 
                 Learn more <a href='https://kreate.knighthat.me/usr/faq/minified_and_full' target="_blank">here</a>.
               </blockquote>
             </details>
-
+            
             ## Changelogs
+            
             Please visit [wiki/changelogs](https://github.com/knighthat/Kreate/wiki/Changelogs) for details.
-          token: ${{ secrets.GITHUB_TOKEN }}
+
+          token: ${{ secrets.RELEASE_TOKEN }}
           generate_release_notes: true
