@@ -1,4 +1,3 @@
-
 package app.kreate.android.themed.common.screens.settings.general
 
 import android.os.Build
@@ -34,18 +33,23 @@ import me.knighthat.component.dialog.InputDialogConstraints
 fun LazyListScope.playerSettingsSection( search: SettingEntrySearch ) {
     header( R.string.player )
 
+    val isConnectionMetered by Preferences.IS_CONNECTION_METERED
+    // We can now observe the state of IS_CONNECTION_METERED directly.
+
     entry( search, R.string.audio_quality_format ) {
         SettingComponents.EnumEntry(
             preference = Preferences.AUDIO_QUALITY,
             titleId = R.string.audio_quality_format,
-            action = SettingComponents.Action.RESTART_PLAYER_SERVICE
+            action = SettingComponents.Action.RESTART_PLAYER_SERVICE,
+            isEnabled = !isConnectionMetered
         )
     }
     entry( search, R.string.enable_connection_metered ) {
         SettingComponents.BooleanEntry(
             Preferences.IS_CONNECTION_METERED,
             R.string.enable_connection_metered,
-            R.string.info_enable_connection_metered
+            R.string.info_enable_connection_metered,
+            action = SettingComponents.Action.RESTART_PLAYER_SERVICE
         ) {
             if ( it )
                 Preferences.AUDIO_QUALITY.value = AudioQualityFormat.Auto
