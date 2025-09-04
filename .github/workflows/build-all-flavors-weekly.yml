@@ -237,7 +237,7 @@ jobs:
         with:
           files: '*.apk'
           name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
-          tag_name: v${{ needs.versioning.outputs.downstream }}
+          tag_name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
           make_latest: true
           body: |
             ## What's `Kreate-izzy.apk`
@@ -246,11 +246,9 @@ jobs:
             download this version here.
 
             ## Verification
-
             > Always check for signature before installing any app you downloaded from Github or any other APK distributors.\
 
             ### Public key hashes
-
             | Algorithm | Hash digest |
             |-----------|-------------|
             | SHA-256   | 9dadd5c4bbfb59174bca523dd10b66bedbbf7b2e00630fa990d140a6a17ce7a5 |
@@ -258,7 +256,6 @@ jobs:
             | MD5       | d4fc781f4a5ffc10434cb84d93706eba |
 
             ### Certificate hashes
-
             | Algorithm | Hash digest |
             |-----------|-------------|
             | SHA-256   | 1bd03a8de5df4dbd7faddb81b9f2aaf55681a584a93d6fb47e9a5ccc736ef7ac |
@@ -301,6 +298,5 @@ jobs:
 
             ## Changelogs
             Please visit [wiki/changelogs](https://github.com/knighthat/Kreate/wiki/Changelogs) for details.
-
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
