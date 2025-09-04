@@ -22,6 +22,17 @@ jobs:
         with:
           submodules: true
           token: ${{ secrets.PAT_TOKEN }} # ✅ Token fix
+          repository: DHR-Store/Kreate
+          ssh-strict: true
+          ssh-user: git
+          persist-credentials: true
+          clean: true
+          sparse-checkout-cone-mode: true
+          fetch-depth: 1
+          fetch-tags: false
+          show-progress: true
+          lfs: false
+          set-safe-directory: true
 
       - name: Configure Git
         run: |
