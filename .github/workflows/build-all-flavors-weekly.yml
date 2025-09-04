@@ -2,7 +2,7 @@ name: Build all flavors
 
 on:
   schedule:
-    - cron: '0 3 1,14 * *'
+    - cron: '0 3 1,14 * *'  # 3AM on 1st & 14th of month
   workflow_dispatch:
 
 concurrency:
@@ -33,11 +33,13 @@ jobs:
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - name: Get downstream (local) version
+
+      - name: Get downstream version
         id: downstream
         run: |
-          echo "version=$(grep -E '^\s*versionName\s*=' composeApp/build.gradle.kts | awk -F '"' '{print $2}')" >> $GITHUB_OUTPUT
+          echo "version=$(grep -E '^\s*versionName\s*=' composeApp/build.gradle.kts | awk -F '\"' '{print $2}')" >> $GITHUB_OUTPUT
           echo "code=$(grep -E '^\s*versionCode\s*=' composeApp/build.gradle.kts | awk -F '= ' '{print $2}')" >> $GITHUB_OUTPUT
+
       - name: Get upstream version
         id: upstream
         run: |
@@ -45,22 +47,19 @@ jobs:
           echo "version=${tag_name#v}" >> $GITHUB_OUTPUT
 
   verify-version:
-    needs: [versioning]
+    needs: versioning
     runs-on: ubuntu-latest
     steps:
-      - name: Check if build can proceed
+      - name: Verify if build should proceed
         run: |
           if [ "${{ needs.versioning.outputs.downstream }}" = "${{ needs.versioning.outputs.upstream }}" ]; then
-            echo "No new version to release."
+            echo "No new version to build."
             exit 1
           fi
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - name: Check changelog
+      - name: Check changelog exists
         run: |
-          if [ ! -e "fastlane/metadata/android/en-US/changelogs/${{ needs.versioning.outputs.code }}.txt" ]; then
-            echo "Changelog not found."
+          if [ ! -f "fastlane/metadata/android/en-US/changelogs/${{ needs.versioning.outputs.code }}.txt" ]; then
+            echo "Changelog missing!"
             exit 1
           fi
 
@@ -70,15 +69,14 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5
+        with: { submodules: true }
+
+      - uses: actions/setup-java@v5
         with:
-          submodules: true
-      - name: Setup Java 21
-        uses: actions/setup-java@v5.0.0
-        with:
-          java-version: "21"
-          distribution: "corretto"
-      - name: Restore Gradle cache
-        uses: actions/cache@v4.2.4
+          java-version: 21
+          distribution: corretto
+
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -87,10 +85,10 @@ jobs:
             ./composeApp/build
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
-      - name: Build APK
-        run: ./gradlew assembleGithubUncompressed
-      - name: Upload unsigned APK
-        uses: actions/upload-artifact@v4.6.2
+
+      - run: ./gradlew assembleGithubUncompressed
+
+      - uses: actions/upload-artifact@v4
         with:
           name: unsigned-uncompressed
           path: composeApp/build/outputs/apk/github/uncompressed/*.apk
@@ -101,15 +99,14 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5
+        with: { submodules: true }
+
+      - uses: actions/setup-java@v5
         with:
-          submodules: true
-      - name: Setup Java 21
-        uses: actions/setup-java@v5.0.0
-        with:
-          java-version: "21"
-          distribution: "corretto"
-      - name: Restore Gradle cache
-        uses: actions/cache@v4.2.4
+          java-version: 21
+          distribution: corretto
+
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -118,10 +115,10 @@ jobs:
             ./composeApp/build
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
-      - name: Build APK
-        run: ./gradlew assembleGithubRelease
-      - name: Upload unsigned APK
-        uses: actions/upload-artifact@v4.6.2
+
+      - run: ./gradlew assembleGithubRelease
+
+      - uses: actions/upload-artifact@v4
         with:
           name: unsigned-release
           path: composeApp/build/outputs/apk/github/release/*.apk
@@ -132,15 +129,14 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v5
+        with: { submodules: true }
+
+      - uses: actions/setup-java@v5
         with:
-          submodules: true
-      - name: Setup Java 21
-        uses: actions/setup-java@v5.0.0
-        with:
-          java-version: "21"
-          distribution: "corretto"
-      - name: Restore Gradle cache
-        uses: actions/cache@v4.2.4
+          java-version: 21
+          distribution: corretto
+
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -149,10 +145,10 @@ jobs:
             ./composeApp/build
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
-      - name: Build APK
-        run: ./gradlew assembleIzzyRelease
-      - name: Upload unsigned APK
-        uses: actions/upload-artifact@v4.6.2
+
+      - run: ./gradlew assembleIzzyRelease
+
+      - uses: actions/upload-artifact@v4
         with:
           name: unsigned-izzy
           path: composeApp/build/outputs/apk/izzy/release/*.apk
@@ -161,13 +157,12 @@ jobs:
     needs: [build-uncompressed, build-release, build-izzy]
     runs-on: ubuntu-latest
     steps:
-      - name: Download unsigned APKs
-        uses: actions/download-artifact@v5.0.0
+      - uses: actions/download-artifact@v5
         with:
           path: upstream/unsigned
           merge-multiple: true
-      - name: Sign APKs
-        uses: Tlaster/android-sign@v1.2.2
+
+      - uses: Tlaster/android-sign@v1.2.2
         with:
           releaseDirectory: upstream/unsigned
           signingKeyBase64: "${{ secrets.KREATE_KEYSTORE }}"
@@ -175,13 +170,12 @@ jobs:
           alias: "${{ secrets.KREATE_KEY_ALIAS }}"
           keyPassword: "${{ secrets.KREATE_KEY_PASSWD }}"
           output: signed
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-      - name: Remove trails
-        run: |
-          for f in signed/*.apk; do mv "$f" "${f//-signed}"; done
-      - name: Upload signed APKs
-        uses: actions/upload-artifact@v4.6.2
+        env: { BUILD_TOOLS_VERSION: "34.0.0" }
+
+      - run: |
+          for filename in signed/*.apk; do mv "$filename" "${filename//-signed}"; done
+
+      - uses: actions/upload-artifact@v4
         with:
           name: signed-apks
           path: signed/*.apk
@@ -190,21 +184,14 @@ jobs:
     needs: [build_time, versioning, sign-apks]
     runs-on: ubuntu-latest
     steps:
-      - name: Download signed APKs
-        uses: actions/download-artifact@v5.0.0
-        with:
-          name: signed-apks
-      - name: Set unique release tag
-        id: set_tag
-        run: |
-          UNIQUE_TAG="v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}"
-          echo "tag_name=$UNIQUE_TAG" >> $GITHUB_OUTPUT
-      - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@v2
+      - uses: actions/download-artifact@v5
+        with: { name: signed-apks }
+
+      - uses: softprops/action-gh-release@v2
         with:
           files: '*.apk'
-          tag_name: ${{ steps.set_tag.outputs.tag_name }}
-          name: ${{ steps.set_tag.outputs.tag_name }}
+          tag_name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
+          name: v${{ needs.versioning.outputs.downstream }}-${{ needs.build_time.outputs.date }}
           make_latest: true
           token: ${{ secrets.RELEASE_TOKEN }}
           generate_release_notes: true
