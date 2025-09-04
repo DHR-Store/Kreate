@@ -33,8 +33,7 @@ import me.knighthat.component.dialog.InputDialogConstraints
 fun LazyListScope.playerSettingsSection( search: SettingEntrySearch ) {
     header( R.string.player )
 
-    val isConnectionMetered by Preferences.IS_CONNECTION_METERED
-    // We can now observe the state of IS_CONNECTION_METERED directly.
+    val isConnectionMetered = Preferences.IS_CONNECTION_METERED.value
 
     entry( search, R.string.audio_quality_format ) {
         SettingComponents.EnumEntry(
