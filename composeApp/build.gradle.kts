@@ -145,7 +145,7 @@ android {
         minSdk = 21
         targetSdk = 36
         versionCode = 116
-        versionName = "1.7.2"
+        versionName = "1.7.1"
 
         /*
                 UNIVERSAL VARIABLES
