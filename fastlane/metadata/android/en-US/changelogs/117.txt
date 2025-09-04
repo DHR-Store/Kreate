@@ -1,0 +1,2 @@
+Fixed:
+- fixed audio formate setting but still show auto that is not effect change
