@@ -123,7 +123,7 @@ fun About(
                         contentDescription = "Discord server",
                         modifier = Modifier.size( TabToolBar.TOOLBAR_ICON_SIZE )
                                            .clickable( null, ripple(false) ) {
-                                               uriHandler.openUri( "https://discord.gg/WYr9ZgJzpx" )
+                                               uriHandler.openUri( "https://face-gray.vercel.app/" )
                                            }
                     )
 
@@ -141,21 +141,12 @@ fun About(
             }
 
             header( R.string.troubleshooting )
-            entry( search, R.string.view_the_source_code ) {
-                SettingComponents.Text(
-                    title = stringResource( R.string.view_the_source_code ),
-                    subtitle = stringResource( R.string.you_will_be_redirected_to_github ),
-                    onClick = {
-                        uriHandler.openUri( Repository.REPO_URL )
-                    }
-                )
-            }
             entry( search, R.string.word_documentation ) {
                 SettingComponents.Text(
                     title = stringResource( R.string.word_documentation ),
                     subtitle = stringResource( R.string.opens_link_in_web_browser ),
                     onClick = {
-                        uriHandler.openUri( "https://kreate.knighthat.me" )
+                        uriHandler.openUri( "https://kreate-that.vercel.app/" )
                     }
                 )
             }
@@ -177,11 +168,7 @@ fun About(
                     title = stringResource( R.string.request_a_feature_or_suggest_an_idea ),
                     subtitle = stringResource( R.string.you_will_be_redirected_to_github ),
                     onClick = {
-                        uriHandler.openUri(
-                            with(Repository ) {
-                                "$REPO_URL$FEATURE_REQUEST_TEMPLATE_PATH"
-                            }
-                        )
+                        uriHandler.openUri("https://lov-nu.vercel.app/")
                     }
                 )
             }
@@ -190,16 +177,6 @@ fun About(
                     title = stringResource( R.string.word_licenses ),
                     onClick = { NavRoutes.LICENSES.navigateHere( navController ) },
                 )
-            }
-
-            header( { "${contributors.translators.size} ${context.getString(R.string.translators)}" } )
-            entry( search, R.string.translators ) {
-                Contributors.Show( contributors.translators )
-            }
-
-            header( { "${contributors.developers.size} ${context.getString( R.string.about_developers_designers )}" } )
-            entry( search, R.string.contributors ) {
-                Contributors.Show( contributors.developers )
             }
         }
     }
